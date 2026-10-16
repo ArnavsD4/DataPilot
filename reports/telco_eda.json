@@ -24,7 +24,31 @@
       "MonthlyCharges",
       "TotalCharges",
       "Churn"
-    ]
+    ],
+    "duplicate_rows": 0,
+    "missing_values": {
+      "customerID": 0,
+      "gender": 0,
+      "SeniorCitizen": 0,
+      "Partner": 0,
+      "Dependents": 0,
+      "tenure": 0,
+      "PhoneService": 0,
+      "MultipleLines": 0,
+      "InternetService": 0,
+      "OnlineSecurity": 0,
+      "OnlineBackup": 0,
+      "DeviceProtection": 0,
+      "TechSupport": 0,
+      "StreamingTV": 0,
+      "StreamingMovies": 0,
+      "Contract": 0,
+      "PaperlessBilling": 0,
+      "PaymentMethod": 0,
+      "MonthlyCharges": 0,
+      "TotalCharges": 11,
+      "Churn": 0
+    }
   },
   "numeric_summary": {
     "SeniorCitizen": {
@@ -71,6 +95,7 @@
   "categorical_summary": {
     "customerID": {
       "unique_values": 7043,
+      "missing_count": 0,
       "value_counts": {
         "7590-VHVEG": 1,
         "5575-GNVDE": 1,
@@ -7115,147 +7140,146 @@
         "4801-JZAZL": 1,
         "8361-LTMKD": 1,
         "3186-AJIEK": 1
-      },
-      "missing_count": 0
+      }
     },
     "gender": {
       "unique_values": 2,
+      "missing_count": 0,
       "value_counts": {
         "Male": 3555,
         "Female": 3488
-      },
-      "missing_count": 0
+      }
     },
     "Partner": {
       "unique_values": 2,
+      "missing_count": 0,
       "value_counts": {
         "No": 3641,
         "Yes": 3402
-      },
-      "missing_count": 0
+      }
     },
     "Dependents": {
       "unique_values": 2,
+      "missing_count": 0,
       "value_counts": {
         "No": 4933,
         "Yes": 2110
-      },
-      "missing_count": 0
+      }
     },
     "PhoneService": {
       "unique_values": 2,
+      "missing_count": 0,
       "value_counts": {
         "Yes": 6361,
         "No": 682
-      },
-      "missing_count": 0
+      }
     },
     "MultipleLines": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "No": 3390,
         "Yes": 2971,
         "No phone service": 682
-      },
-      "missing_count": 0
+      }
     },
     "InternetService": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "Fiber optic": 3096,
         "DSL": 2421,
         "No": 1526
-      },
-      "missing_count": 0
+      }
     },
     "OnlineSecurity": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "No": 3498,
         "Yes": 2019,
         "No internet service": 1526
-      },
-      "missing_count": 0
+      }
     },
     "OnlineBackup": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "No": 3088,
         "Yes": 2429,
         "No internet service": 1526
-      },
-      "missing_count": 0
+      }
     },
     "DeviceProtection": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "No": 3095,
         "Yes": 2422,
         "No internet service": 1526
-      },
-      "missing_count": 0
+      }
     },
     "TechSupport": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "No": 3473,
         "Yes": 2044,
         "No internet service": 1526
-      },
-      "missing_count": 0
+      }
     },
     "StreamingTV": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "No": 2810,
         "Yes": 2707,
         "No internet service": 1526
-      },
-      "missing_count": 0
+      }
     },
     "StreamingMovies": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "No": 2785,
         "Yes": 2732,
         "No internet service": 1526
-      },
-      "missing_count": 0
+      }
     },
     "Contract": {
       "unique_values": 3,
+      "missing_count": 0,
       "value_counts": {
         "Month-to-month": 3875,
         "Two year": 1695,
         "One year": 1473
-      },
-      "missing_count": 0
+      }
     },
     "PaperlessBilling": {
       "unique_values": 2,
+      "missing_count": 0,
       "value_counts": {
         "Yes": 4171,
         "No": 2872
-      },
-      "missing_count": 0
+      }
     },
     "PaymentMethod": {
       "unique_values": 4,
+      "missing_count": 0,
       "value_counts": {
         "Electronic check": 2365,
         "Mailed check": 1612,
         "Bank transfer (automatic)": 1544,
         "Credit card (automatic)": 1522
-      },
-      "missing_count": 0
+      }
     },
     "Churn": {
       "unique_values": 2,
+      "missing_count": 0,
       "value_counts": {
         "No": 5174,
         "Yes": 1869
-      },
-      "missing_count": 0
+      }
     }
   },
   "correlations": {
@@ -7291,5 +7315,11 @@
       "No": 5174,
       "Yes": 1869
     }
+  },
+  "visualizations": {
+    "SeniorCitizen": "C:\\Users\\Arnav\\DataPilot\\reports\\plots\\SeniorCitizen_histogram.png",
+    "tenure": "C:\\Users\\Arnav\\DataPilot\\reports\\plots\\tenure_histogram.png",
+    "MonthlyCharges": "C:\\Users\\Arnav\\DataPilot\\reports\\plots\\MonthlyCharges_histogram.png",
+    "TotalCharges": "C:\\Users\\Arnav\\DataPilot\\reports\\plots\\TotalCharges_histogram.png"
   }
 }
