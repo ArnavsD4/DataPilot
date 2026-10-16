@@ -43,12 +43,34 @@ def check_duplicate_rows(df: pd.DataFrame) -> dict:
 def generate_quality_report(df: pd.DataFrame) -> dict:
     """Combine data-quality checks into one report."""
 
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Expected a pandas DataFrame.")
+
+    if df.empty:
+        raise ValueError("Cannot generate a report for an empty dataset.")
     missing_report = check_missing_values(df)
     duplicate_report = check_duplicate_rows(df)
+    type_report = inspect_column_types(df)
 
     return {
         "rows": len(df),
         "columns": len(df.columns),
-        **missing_report,
-        **duplicate_report,
+        "missing_values": missing_report["missing_values"],
+        "missing_percentage": missing_report["missing_percentage"],
+        "duplicate_rows": duplicate_report["duplicate_rows"],
+        "data_types": type_report["data_types"]
+    }
+
+
+def inspect_column_types(df: pd.DataFrame) -> dict:
+    """Report the stored data type of each column."""
+
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Expected a pandas DataFrame.")
+
+    if df.empty:
+        raise ValueError("Cannot inspect an empty dataset.")
+
+    return {
+        "data_types": df.dtypes.astype(str).to_dict()
     }

@@ -5,6 +5,7 @@ import pytest
 from src.quality import check_missing_values
 from src.quality import check_duplicate_rows
 from src.quality import generate_quality_report
+from src.quality import inspect_column_types
 
 
 def test_check_missing_values():
@@ -59,3 +60,30 @@ def test_generate_quality_report():
     assert report["missing_values"]["age"] == 1
     assert report["missing_values"]["city"] == 0
     assert report["duplicate_rows"] == 1
+
+
+def test_inspect_column_types():
+    df = pd.DataFrame({
+        "age": [20, 25, 30],
+        "city": ["Delhi", "Mumbai", "Kolkata"],
+    })
+
+    report = inspect_column_types(df)
+
+    assert report["data_types"]["age"] == str(df["age"].dtype)
+    assert report["data_types"]["city"] == str(df["city"].dtype)
+
+
+def test_quality_report_includes_data_types():
+    df = pd.DataFrame({
+        "age": [20, 30],
+        "city": ["Delhi", "Mumbai"],
+    })
+
+    report = generate_quality_report(df)
+
+    
+    assert "data_types" in report
+    assert report["data_types"]["age"] == str(df["age"].dtype)
+    assert report["data_types"]["city"] == str(df["city"].dtype)
+
