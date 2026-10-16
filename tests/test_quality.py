@@ -6,6 +6,8 @@ from src.quality import check_missing_values
 from src.quality import check_duplicate_rows
 from src.quality import generate_quality_report
 from src.quality import inspect_column_types
+from src.quality import check_numeric_ranges
+from src.quality import detect_outliers_iqr
 
 
 def test_check_missing_values():
@@ -86,4 +88,54 @@ def test_quality_report_includes_data_types():
     assert "data_types" in report
     assert report["data_types"]["age"] == str(df["age"].dtype)
     assert report["data_types"]["city"] == str(df["city"].dtype)
+
+
+def test_check_numeric_ranges_flags_out_of_range_values():
+    df = pd.DataFrame({
+        "age": [20, -5, 150]
+    })
+
+    report = check_numeric_ranges(
+        df,
+        {"age": {"min": 0, "max": 120}}
+    )
+
+    result = report["range_violations"]["age"]
+
+    assert result["invalid_count"] == 2
+    assert result["invalid_indices"] == [1, 2]
+
+
+import pytest
+
+def test_check_numeric_ranges_rejects_missing_column():
+    df = pd.DataFrame({"age": [20, 30]})
+
+    with pytest.raises(ValueError, match="does not exist"):
+        check_numeric_ranges(
+            df,
+            {"salary": {"min": 0}}
+        )
+
+
+def test_check_numeric_ranges_rejects_non_numeric_column():
+    df = pd.DataFrame({"age": ["twenty", "thirty"]})
+
+    with pytest.raises(TypeError, match="must be numeric"):
+        check_numeric_ranges(
+            df,
+            {"age": {"min": 0, "max": 120}}
+        )
+
+
+def test_detect_outliers_iqr_flags_extreme_value():
+    df = pd.DataFrame({
+        "salary": [10, 12, 13, 14, 15, 16, 100]
+    })
+
+    report = detect_outliers_iqr(df)
+    result = report["outliers"]["salary"]
+
+    assert result["outlier_count"] == 1
+    assert result["outlier_indices"] == [6]
 
