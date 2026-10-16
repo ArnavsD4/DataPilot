@@ -6,7 +6,8 @@ from src.eda import (
     summarize_numeric,
     summarize_categorical,
     calculate_correlations,
-    run_eda
+    run_eda,
+    find_high_correlations
 )
 
 
@@ -91,3 +92,31 @@ def test_run_eda_rejects_missing_target_column():
 
     with pytest.raises(ValueError, match="does not exist"):
         run_eda(df, target_column="churn")
+
+def test_analyze_skewness_returns_expected_interpretations():
+    import pandas as pd
+    from src.eda import analyze_skewness
+
+    df = pd.DataFrame({
+        "symmetric": [1, 2, 3, 4, 5],
+        "right_skewed": [1, 2, 2, 3, 20],
+    })
+
+    report = analyze_skewness(df)
+
+    assert report["symmetric"]["interpretation"] == "approximately_symmetric"
+    assert report["right_skewed"]["interpretation"] == "right_skewed"
+
+def test_find_high_correlations_flags_strong_pairs():
+    df = pd.DataFrame({
+        "age": [10, 20, 30, 40, 50],
+        "age_scaled": [100, 200, 300, 400, 500],
+        "score": [50, 10, 40, 20, 30],
+    })
+
+    report = find_high_correlations(df)
+
+    assert len(report) == 1
+    assert report[0]["feature_1"] == "age"
+    assert report[0]["feature_2"] == "age_scaled"
+    assert report[0]["correlation"] == 1.0

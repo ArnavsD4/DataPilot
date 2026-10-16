@@ -42,6 +42,41 @@ def summarize_numeric(df: pd.DataFrame) -> dict:
 
     return report
 
+def analyze_skewness(df: pd.DataFrame) -> dict:
+    """Calculate skewness for each numeric column."""
+
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Expected a pandas DataFrame.")
+
+    if df.empty:
+        raise ValueError("Cannot analyze an empty dataset.")
+
+    numeric_df = df.select_dtypes(include="number")
+    results = {}
+
+    for column in numeric_df.columns:
+        values = numeric_df[column].dropna()
+
+        if len(values) < 3 or values.nunique() < 2:
+            skewness = None
+            interpretation = "insufficient_variation"
+        else:
+            skewness = round(float(values.skew()), 4)
+
+            if skewness > 0.5:
+                interpretation = "right_skewed"
+            elif skewness < -0.5:
+                interpretation = "left_skewed"
+            else:
+                interpretation = "approximately_symmetric"
+
+        results[column] = {
+            "skewness": skewness,
+            "interpretation": interpretation,
+        }
+
+    return results
+
 
 
 def summarize_categorical(df: pd.DataFrame) -> dict:
@@ -208,6 +243,40 @@ def plot_numeric_histograms(
 
     return plots
 
+def find_high_correlations(
+    df: pd.DataFrame,
+    threshold: float = 0.85,
+) -> list[dict]:
+    """Find numeric feature pairs with strong absolute correlation."""
+
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Expected a pandas DataFrame.")
+
+    if df.empty:
+        raise ValueError("Cannot analyze an empty dataset.")
+
+    if not 0 < threshold <= 1:
+        raise ValueError("threshold must be greater than 0 and at most 1.")
+
+    numeric_df = df.select_dtypes(include="number")
+    correlation_matrix = numeric_df.corr()
+
+    high_correlations = []
+
+    for i, column_a in enumerate(correlation_matrix.columns):
+        for j in range(i + 1, len(correlation_matrix.columns)):
+            column_b = correlation_matrix.columns[j]
+            correlation = correlation_matrix.iloc[i, j]
+
+            if pd.notna(correlation) and abs(correlation) >= threshold:
+                high_correlations.append({
+                    "feature_1": column_a,
+                    "feature_2": column_b,
+                    "correlation": round(float(correlation), 4),
+                })
+
+    return high_correlations
+
 
 def run_eda(
     df: pd.DataFrame,
@@ -255,5 +324,8 @@ def run_eda(
 
     with report_file.open("w", encoding="utf-8") as file:
         json.dump(report, file, indent=2, ensure_ascii=False)
+
+    report["skewness_analysis"] = analyze_skewness(df)
+    report["high_correlations"] = find_high_correlations(df)
 
     return report

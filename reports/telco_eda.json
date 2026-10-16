@@ -7321,5 +7321,24 @@
     "tenure": "C:\\Users\\Arnav\\DataPilot\\reports\\plots\\tenure_histogram.png",
     "MonthlyCharges": "C:\\Users\\Arnav\\DataPilot\\reports\\plots\\MonthlyCharges_histogram.png",
     "TotalCharges": "C:\\Users\\Arnav\\DataPilot\\reports\\plots\\TotalCharges_histogram.png"
-  }
+  },
+  "skewness_analysis": {
+    "SeniorCitizen": {
+      "skewness": 1.8336,
+      "interpretation": "right_skewed"
+    },
+    "tenure": {
+      "skewness": 0.2395,
+      "interpretation": "approximately_symmetric"
+    },
+    "MonthlyCharges": {
+      "skewness": -0.2205,
+      "interpretation": "approximately_symmetric"
+    },
+    "TotalCharges": {
+      "skewness": 0.9616,
+      "interpretation": "right_skewed"
+    }
+  },
+  "high_correlations": []
 }
