@@ -1,4 +1,4 @@
-
+import json
 import pandas as pd
 import pytest
 
@@ -52,3 +52,21 @@ def test_profile_dataset_rejects_empty_dataframe():
         match="Cannot profile an empty dataset."
     ):
         profile_dataset(df)
+
+def test_profile_dataset_rejects_invalid_input():
+    with pytest.raises(TypeError, match="Expected a pandas DataFrame"):
+        profile_dataset([1, 2, 3])
+
+def test_profile_report_is_json_serializable():
+    df = pd.DataFrame({
+        "age": [20, 30, 40],
+        "city": ["Delhi", "Mumbai", "Delhi"]
+    })
+
+    report = profile_dataset(df)
+
+    json_report = json.dumps(report)
+    loaded_report = json.loads(json_report)
+
+    assert loaded_report["rows"] == 3
+    assert loaded_report["columns"] == 2

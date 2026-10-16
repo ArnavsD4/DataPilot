@@ -4,6 +4,8 @@ def profile_dataset(df: pd.DataFrame) -> dict:
     """
     Generate basic structural information about a dataset
     """
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Expected a pandas DataFrame.")
 
     if df.empty:
         raise ValueError("Cannot profile an empty dataset.")
