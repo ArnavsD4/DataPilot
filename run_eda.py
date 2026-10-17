@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.eda import run_eda
+from src.cleaning import clean_total_charges, handle_missing_values
 
 
 def main():
@@ -21,11 +22,15 @@ def main():
     df = pd.read_csv(dataset_path)
 
     # Convert TotalCharges to numeric because the CSV may contain blanks.
-    if "TotalCharges" in df.columns:
-        df["TotalCharges"] = pd.to_numeric(
-            df["TotalCharges"],
-            errors="coerce",
-        )
+    df = clean_total_charges(df)
+
+    print("\nCleaning verification:")
+    print(f"TotalCharges dtype: {df['TotalCharges'].dtype}")
+    print(f"Missing TotalCharges: {df['TotalCharges'].isna().sum()}")
+    print(
+    "Zero-tenure rows with zero charges: "
+    f"{((df['tenure'] == 0) & (df['TotalCharges'] == 0)).sum()}"
+    )
 
     report = run_eda(
         df,
