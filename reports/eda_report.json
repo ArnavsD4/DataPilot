@@ -1,19 +1,15 @@
 {
   "dataset_overview": {
     "rows": 3,
-    "columns": 4,
+    "columns": 2,
     "column_names": [
       "age",
-      "salary",
-      "city",
-      "churn"
+      "city"
     ],
     "duplicate_rows": 0,
     "missing_values": {
       "age": 0,
-      "salary": 0,
-      "city": 0,
-      "churn": 0
+      "city": 0
     }
   },
   "numeric_summary": {
@@ -26,16 +22,6 @@
       "50%": 30.0,
       "75%": 35.0,
       "max": 40.0
-    },
-    "salary": {
-      "count": 3.0,
-      "mean": 200.0,
-      "std": 100.0,
-      "min": 100.0,
-      "25%": 150.0,
-      "50%": 200.0,
-      "75%": 250.0,
-      "max": 300.0
     }
   },
   "categorical_summary": {
@@ -43,39 +29,21 @@
       "unique_values": 2,
       "missing_count": 0,
       "value_counts": {
-        "A": 2,
-        "B": 1
-      }
-    },
-    "churn": {
-      "unique_values": 2,
-      "missing_count": 0,
-      "value_counts": {
-        "No": 2,
-        "Yes": 1
+        "Delhi": 2,
+        "Mumbai": 1
       }
     }
   },
-  "correlations": {
-    "age": {
-      "age": 1.0,
-      "salary": 1.0
-    },
-    "salary": {
-      "age": 1.0,
-      "salary": 1.0
-    }
-  },
-  "target_analysis": {
-    "column": "churn",
-    "type": "categorical",
-    "value_counts": {
-      "No": 2,
-      "Yes": 1
-    }
-  },
+  "correlations": {},
+  "target_analysis": null,
   "visualizations": {
-    "age": "reports\\plots\\age_histogram.png",
-    "salary": "reports\\plots\\salary_histogram.png"
-  }
+    "age": "reports\\plots\\age_histogram.png"
+  },
+  "skewness_analysis": {
+    "age": {
+      "skewness": 0.0,
+      "interpretation": "approximately_symmetric"
+    }
+  },
+  "high_correlations": []
 }

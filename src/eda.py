@@ -322,10 +322,10 @@ def run_eda(
     report_file = Path(output_path)
     report_file.parent.mkdir(parents=True, exist_ok=True)
 
-    with report_file.open("w", encoding="utf-8") as file:
-        json.dump(report, file, indent=2, ensure_ascii=False)
-
     report["skewness_analysis"] = analyze_skewness(df)
     report["high_correlations"] = find_high_correlations(df)
+
+    with report_file.open("w", encoding="utf-8") as file:
+        json.dump(report, file, indent=2, ensure_ascii=False)
 
     return report
