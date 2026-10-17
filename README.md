@@ -1,15 +1,14 @@
 # DataPilot — Automated Data Analysis & Science Agent
 
-DataPilot is a Python-based data science project that profiles tabular datasets, identifies data-quality issues, performs automated exploratory data analysis (EDA), and generates structured reports with visualizations.
+DataPilot is a Python-based data science project that profiles tabular datasets, identifies data-quality issues, applies configurable cleaning strategies, performs automated exploratory data analysis (EDA), and supports machine learning model evaluation.
 
-The long-term goal is to evolve DataPilot into an autonomous data science agent that can investigate datasets, formulate hypotheses, evaluate them using data-driven evidence, and produce analytical insights.
+The long-term goal is to evolve DataPilot into an autonomous data science agent that can investigate datasets, formulate hypotheses, evaluate them using data-driven evidence, and produce actionable analytical insights.
 
 ## Current Features
 
 ### 1. Dataset Profiling
-
 - Dataset dimensions and column names
-- Data types and column classification
+- Data types and numerical/categorical column classification
 - Missing-value counts and percentages
 - Unique-value counts
 - Numerical descriptive statistics
@@ -17,52 +16,79 @@ The long-term goal is to evolve DataPilot into an autonomous data science agent 
 - JSON-serializable profiling reports
 
 ### 2. Data Quality Checks
-
 - Missing-value analysis
 - Duplicate-row detection
 - Column data-type inspection
-- Configurable numeric range validation
+- Configurable numerical range validation
 - IQR-based outlier detection
 
-### 3. Automated Exploratory Data Analysis
+### 3. Data Cleaning
+- Configurable missing-value handling strategies
+- Mean, median, and mode imputation
+- Custom-value imputation
+- Domain-specific cleaning for the Telco Customer Churn dataset
+- Non-destructive cleaning functions that preserve the original DataFrame
 
-- Numerical summaries
+### 4. Automated Exploratory Data Analysis
+- Numerical descriptive summaries
 - Categorical value counts and cardinality
-- Correlation analysis
+- Numerical correlation analysis
 - Detection of highly correlated numerical feature pairs
 - Skewness analysis with basic interpretation
 - Optional target-column analysis
 - Histograms for numerical columns
-- JSON reports and saved plot images
+- Structured JSON reports and saved visualizations
+
+### 5. Machine Learning Baseline
+- Feature and target separation
+- Numerical and categorical preprocessing
+- Missing-value imputation
+- Feature scaling and categorical encoding
+- Train/test splitting
+- Classification model training and evaluation
+- Logistic Regression, Decision Tree, and Random Forest comparison
+- Accuracy, confusion matrix, and classification report
+- Cross-validation for more reliable model comparison
+
+### 6. Integrated Data Pipeline
+- Load and validate CSV datasets
+- Generate profiling and data-quality reports
+- Apply supported cleaning operations
+- Run automated EDA
+- Return structured results for downstream use
 
 ## Tech Stack
 
 - **Language:** Python
 - **Data analysis:** Pandas, NumPy
+- **Machine learning:** scikit-learn
 - **Visualization:** Matplotlib
 - **Testing:** pytest
-- **Dataset:** Telco Customer Churn dataset
+- **Input format:** CSV
+- **Output formats:** JSON reports and image files
 
 ## Project Structure
 
 ```text
 DataPilot/
 ├── data/
-│   └── raw/
+│   ├── raw/
+│   └── testing/
 ├── notebooks/
 ├── reports/
 │   ├── plots/
-│   ├── telco_profile.json
-│   └── telco_eda.json
+│   ├── eda_report.json
+│   ├── telco_eda.json
+│   └── telco_profile.json
 ├── src/
+│   ├── __init__.py
+│   ├── cleaning.py
+│   ├── eda.py
+│   ├── ml.py
+│   ├── pipeline.py
 │   ├── profiler.py
-│   ├── quality.py
-│   └── eda.py
+│   └── quality.py
 ├── tests/
-│   ├── test_profiler.py
-│   ├── test_quality.py
-│   ├── test_eda.py
-│   └── test_histograms.py
 ├── run_eda.py
 ├── requirements.txt
 └── README.md
@@ -92,7 +118,7 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-### 4. Add the dataset
+### 4. Add a dataset
 
 Place the Telco Customer Churn CSV file at:
 
@@ -100,7 +126,7 @@ Place the Telco Customer Churn CSV file at:
 data/raw/Telco-Customer-Churn.csv
 ```
 
-The dataset is not included in this repository, so obtain it separately.
+The dataset is not included in this repository. Obtain it separately and place it at the path expected by the runner.
 
 ### 5. Run automated EDA
 
@@ -108,49 +134,71 @@ The dataset is not included in this repository, so obtain it separately.
 python run_eda.py
 ```
 
-The pipeline generates a structured EDA report and saves numerical histograms under `reports/plots/`.
+This runs the EDA workflow and saves a structured report and generated visualizations using the configured output paths.
 
-### 6. Run the test suite
+### 6. Run the integrated pipeline
+
+The pipeline can also be called from Python:
+
+```python
+from src.pipeline import run_pipeline
+
+result = run_pipeline("data/raw/Telco-Customer-Churn.csv")
+
+print(result["dataset"])
+print(result["quality"])
+print(result["eda"]["dataset_overview"])
+```
+
+The returned structure contains dataset metadata, profiling and quality results, cleaning information, and EDA results according to the pipeline implementation.
+
+### 7. Run the test suite
 
 ```bash
 python -m pytest -v
 ```
 
-## Example Results
+The latest verified local test run completed with **44 passing tests**. Run the suite again after making changes to confirm the current result.
 
-The current Telco Customer Churn dataset contains:
+## Example Dataset
+
+The Telco Customer Churn dataset used during development contains:
 
 - **Rows:** 7,043
 - **Columns:** 21
-- **Numerical summaries:** 4
-- **Categorical summaries:** 17
-- **Numerical histograms:** 4
+- **Numerical columns:** 4
+- **Categorical columns:** 17
 
-The EDA report includes dataset overview, numerical and categorical summaries, correlations, target analysis, skewness analysis, and visualization paths.
-
-These results describe the current implementation and this dataset; results will vary for other datasets.
+EDA results and visualization counts depend on the dataset, the selected target column, and the configured output settings.
 
 ## Development Roadmap
 
 - [x] Dataset profiling
 - [x] Data-quality checks
+- [x] Configurable data cleaning
 - [x] Automated EDA
 - [x] Numerical histogram generation
 - [x] Skewness and high-correlation analysis
-- [x] Automated tests for the implemented modules
-- [ ] Automated data cleaning and preprocessing pipeline
-- [ ] ML model training and evaluation
-- [ ] Model comparison and explainability
+- [x] Integrated CSV analysis pipeline
+- [x] ML preprocessing and baseline model training
+- [x] Model comparison and cross-validation
+- [x] Automated tests for implemented modules
+- [ ] More robust model explainability
 - [ ] LangGraph-based agent orchestration
-- [ ] FastAPI service
 - [ ] MCP tool integration
+- [ ] FastAPI service
 - [ ] Interactive frontend
+- [ ] End-to-end autonomous analysis and insight generation
 
 ## Testing
 
-The current test suite has **27 passing tests** covering profiling, data-quality checks, EDA, and histogram generation.
+The test suite covers dataset profiling, data-quality checks, cleaning behavior, EDA functionality, machine learning utilities, and pipeline integration.
 
-Run the tests locally to verify the current state of the code.
+Run:
+
+```bash
+python -m pytest -v
+```
 
 ## Author
 
