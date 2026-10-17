@@ -46,7 +46,7 @@
       "PaperlessBilling": 0,
       "PaymentMethod": 0,
       "MonthlyCharges": 0,
-      "TotalCharges": 11,
+      "TotalCharges": 0,
       "Churn": 0
     }
   },
@@ -82,13 +82,13 @@
       "max": 118.75
     },
     "TotalCharges": {
-      "count": 7032.0,
-      "mean": 2283.3004408418656,
-      "std": 2266.771361883145,
-      "min": 18.8,
-      "25%": 401.45,
-      "50%": 1397.475,
-      "75%": 3794.7375,
+      "count": 7043.0,
+      "mean": 2279.7343035638223,
+      "std": 2266.7944696890213,
+      "min": 0.0,
+      "25%": 398.55,
+      "50%": 1394.55,
+      "75%": 3786.6,
       "max": 8684.8
     }
   },
@@ -7287,24 +7287,24 @@
       "SeniorCitizen": 1.0,
       "tenure": 0.016566877681809315,
       "MonthlyCharges": 0.22017333857627205,
-      "TotalCharges": 0.10241060539533069
+      "TotalCharges": 0.1030061840795253
     },
     "tenure": {
       "SeniorCitizen": 0.016566877681809315,
       "tenure": 1.0,
       "MonthlyCharges": 0.24789985628615094,
-      "TotalCharges": 0.8258804609332019
+      "TotalCharges": 0.8261783979502434
     },
     "MonthlyCharges": {
       "SeniorCitizen": 0.22017333857627205,
       "tenure": 0.24789985628615094,
       "MonthlyCharges": 1.0,
-      "TotalCharges": 0.6510648032262017
+      "TotalCharges": 0.6511738315787816
     },
     "TotalCharges": {
-      "SeniorCitizen": 0.10241060539533069,
-      "tenure": 0.8258804609332019,
-      "MonthlyCharges": 0.6510648032262017,
+      "SeniorCitizen": 0.1030061840795253,
+      "tenure": 0.8261783979502434,
+      "MonthlyCharges": 0.6511738315787816,
       "TotalCharges": 1.0
     }
   },
@@ -7336,7 +7336,7 @@
       "interpretation": "approximately_symmetric"
     },
     "TotalCharges": {
-      "skewness": 0.9616,
+      "skewness": 0.9632,
       "interpretation": "right_skewed"
     }
   },
