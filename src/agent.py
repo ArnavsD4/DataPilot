@@ -6,6 +6,7 @@ from src.eda import run_eda
 from src.ml import prepare_features, compare_models
 from src.profiler import profile_dataset
 from src.quality import generate_quality_report
+from src.interpreter import interpret_results
 
 
 SUPPORTED_TOOLS = {
@@ -16,8 +17,13 @@ SUPPORTED_TOOLS = {
 }
 
 
-def execute_plan(df: pd.DataFrame, plan: dict) -> dict:
-    """Execute validated analysis tools and return their results."""
+
+def execute_plan(
+    df: pd.DataFrame,
+    plan: dict,
+    question: str | None = None,
+) -> dict:
+    """Execute a validated analysis plan and interpret its results."""
 
     if not isinstance(df, pd.DataFrame) or df.empty:
         raise ValueError("Provide a non-empty pandas DataFrame.")
@@ -61,7 +67,10 @@ def execute_plan(df: pd.DataFrame, plan: dict) -> dict:
         elif tool == "compare_models":
             target = plan.get("target_column")
 
-            if not isinstance(target, str) or target not in cleaned_df.columns:
+            if (
+                not isinstance(target, str)
+                or target not in cleaned_df.columns
+            ):
                 raise ValueError(
                     "Classification requires a valid target column."
                 )
@@ -80,8 +89,21 @@ def execute_plan(df: pd.DataFrame, plan: dict) -> dict:
             X, y = prepare_features(cleaned_df, target)
             results["model_comparison"] = compare_models(X, y)
 
+    # Interpret only after the requested tools have finished.
+    interpretation_question = (
+        question
+        or plan.get("intent")
+        or "Summarize the dataset analysis."
+    )
+
+    interpretation = interpret_results(
+        interpretation_question,
+        results,
+    )
+
     return {
         "status": "completed",
         "tools_executed": list(dict.fromkeys(tools)),
         "results": results,
+        "interpretation": interpretation,
     }
