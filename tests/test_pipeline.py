@@ -90,3 +90,22 @@ def test_run_pipeline_rejects_invalid_target(tmp_path):
 
     with pytest.raises(ValueError, match="does not exist"):
         run_pipeline(csv_path, target_column="unknown_column")
+
+
+def test_pipeline_cleaning_report_includes_outliers(tmp_path):
+    import pandas as pd
+
+    from src.pipeline import run_pipeline
+
+    csv_path = tmp_path / "outlier_demo.csv"
+    pd.DataFrame({
+        "Age": [20, 21, 22, 23, 24, 100],
+        "City": ["A", "B", "A", "B", "A", "B"],
+    }).to_csv(csv_path, index=False)
+
+    result = run_pipeline(csv_path)
+
+    assert "outliers" in result["cleaning"]
+    assert result["cleaning"]["outliers"]["Age"]["outlier_count"] == 1
+    assert result["cleaning"]["rows_before"] == 6
+    assert result["cleaning"]["rows_after"] == 6

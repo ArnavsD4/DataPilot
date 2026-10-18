@@ -3,11 +3,12 @@ from pathlib import Path
 import pandas as pd
 from pandas.errors import EmptyDataError
 
-from src.cleaning import clean_total_charges
+from src.cleaning import auto_clean_dataset
 from src.profiler import profile_dataset
 from src.quality import generate_quality_report
 from src.eda import run_eda
 from src.ml import prepare_features, compare_models
+
 
 
 def run_pipeline(
@@ -16,7 +17,7 @@ def run_pipeline(
 ) -> dict:
     """
     Load a CSV and generate profiling, quality,
-    and cleaning reports.
+    cleaning, EDA, and optional ML reports.
     """
     path = Path(csv_path)
 
@@ -31,7 +32,7 @@ def run_pipeline(
     except EmptyDataError as exc:
         raise ValueError(
             "Cannot run the pipeline on an empty dataset."
-            ) from exc
+        ) from exc
 
     if df.empty:
         raise ValueError("Cannot run the pipeline on an empty dataset.")
@@ -49,13 +50,8 @@ def run_pipeline(
     profile = profile_dataset(df)
     quality_before = generate_quality_report(df)
 
-    # Step 2: Apply only explicitly defined cleaning rules.
-    cleaned_df = df.copy()
-    cleaning_actions = []
-
-    if {"TotalCharges", "tenure"}.issubset(cleaned_df.columns):
-        cleaned_df = clean_total_charges(cleaned_df)
-        cleaning_actions.append("clean_total_charges")
+    # Step 2: Automatically clean supported data-quality issues.
+    cleaned_df, cleaning_report = auto_clean_dataset(df)
 
     # Step 3: Check the cleaned dataset.
     quality_after = generate_quality_report(cleaned_df)
@@ -71,9 +67,14 @@ def run_pipeline(
     ml_report = None
 
     if target_column is not None:
+        if cleaned_df[target_column].isna().any():
+            raise ValueError(
+                f"Target column '{target_column}' still contains "
+                "missing values after cleaning. ML training cannot proceed."
+            )
+
         X, y = prepare_features(cleaned_df, target_column)
         ml_report = compare_models(X, y)
-
 
     return {
         "dataset": {
@@ -85,7 +86,7 @@ def run_pipeline(
         "quality_before": quality_before,
         "quality_after": quality_after,
         "cleaning": {
-            "actions": cleaning_actions,
+            **cleaning_report,
             "rows_after_cleaning": int(cleaned_df.shape[0]),
             "columns_after_cleaning": int(cleaned_df.shape[1]),
         },

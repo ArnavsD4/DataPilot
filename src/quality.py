@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def check_missing_values(df: pd.DataFrame) -> dict:
     """Report missing values in each column."""
 
