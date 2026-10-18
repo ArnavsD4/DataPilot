@@ -139,3 +139,14 @@ def test_detect_outliers_iqr_flags_extreme_value():
     assert result["outlier_count"] == 1
     assert result["outlier_indices"] == [6]
 
+def test_binary_column_is_skipped_by_iqr():
+    df = pd.DataFrame({
+        "SeniorCitizen": [0] * 8 + [1] * 2,
+        "Salary": [10, 11, 12, 13, 14, 15, 16, 17, 18, 1000],
+    })
+
+    result = detect_outliers_iqr(df)["outliers"]
+
+    assert "SeniorCitizen" not in result
+    assert "Salary" in result
+    assert result["Salary"]["outlier_count"] == 1

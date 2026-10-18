@@ -118,7 +118,7 @@ def check_numeric_ranges(
 
 
 def detect_outliers_iqr(df: pd.DataFrame) -> dict:
-    """Detect potential numeric outliers using the IQR method."""
+    """Detect potential outliers in numeric columns using IQR."""
 
     if not isinstance(df, pd.DataFrame):
         raise TypeError("Expected a pandas DataFrame.")
@@ -133,6 +133,10 @@ def detect_outliers_iqr(df: pd.DataFrame) -> dict:
         series = df[column].dropna()
 
         if series.empty:
+            continue
+
+        # IQR is not useful for binary or constant columns.
+        if series.nunique() <= 2:
             continue
 
         q1 = series.quantile(0.25)
